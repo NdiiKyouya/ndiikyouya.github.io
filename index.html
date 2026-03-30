@@ -270,32 +270,30 @@
             }
         }
 
-        // Gemini API Logic
-        const apiKey = "https://gemini-web-app-gamma.vercel.app"; 
-        async function callGemini() {
-            const input = document.getElementById('ai-input');
-            const display = document.getElementById('ai-display');
-            if (!input.value.trim()) return;
+        // Ganti fungsi lama dengan ini
+async function callGemini() {
+    const input = document.getElementById('ai-input');
+    const display = document.getElementById('ai-display');
+    if (!input.value.trim()) return;
 
-            const userText = input.value;
-            input.value = "";
-            display.innerHTML = '<div class="dot-loader"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+    const userText = input.value;
+    input.value = "";
+    display.innerHTML = '<div class="dot-loader"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
 
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: userText }] }],
-                        systemInstruction: { parts: [{ text: "Kamu adalah asisten Nugraha (18 thn, Cililin). Jawab ramah & singkat." }] }
-                    })
-                });
-                const data = await response.json();
-                display.innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, ada kendala.";
-            } catch (e) {
-                display.innerText = "Gagal memuat respon AI.";
-            }
-        }
+    try {
+        // Kita panggil endpoint internal Vercel kita sendiri
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userText })
+        });
+
+        const data = await response.json();
+        display.innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, ada kendala.";
+    } catch (e) {
+        display.innerText = "Gagal memuat respon AI.";
+    }
+}
     </script>
 </body>
 </html>
