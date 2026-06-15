@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — [Nama Kamu]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --indigo:   #5B4FE8;
+      --indigo-l: #7B71FF;
+      --amber:    #F5A623;
+      --radius:   12px;
+      --nav-h:    68px;
+      --ease:     cubic-bezier(.4,0,.2,1);
+      --fs-xs:    .75rem;
+      --fs-sm:    .875rem;
+      --fs-base:  1rem;
+      --fs-lg:    1.125rem;
+      --fs-xl:    1.375rem;
+      --fs-2xl:   1.75rem;
+      --fs-3xl:   2.25rem;
+      --fs-4xl:   3rem;
+      --fs-hero:  clamp(2.8rem, 8vw, 6rem);
+    }
+
+    [data-theme="dark"] {
+      --bg:        #0A0F1E;
+      --bg2:       #111827;
+      --bg3:       #1a2235;
+      --border:    rgba(255,255,255,.07);
+      --text:      #F0EEF9;
+      --text-2:    #9CA3AF;
+      --text-3:    #6B7280;
+      --card-bg:   rgba(255,255,255,.04);
+      --card-hover:rgba(255,255,255,.07);
+      --nav-blur:  rgba(10,15,30,.85);
+      --shadow:    0 8px 32px rgba(0,0,0,.5);
+    }
+    [data-theme="light"] {
+      --bg:        #F7F5F2;
+      --bg2:       #FFFFFF;
+      --bg3:       #EDE9E4;
+      --border:    rgba(0,0,0,.08);
+      --text:      #0D1117;
+      --text-2:    #4B5563;
+      --text-3:    #9CA3AF;
+      --card-bg:   rgba(0,0,0,.03);
+      --card-hover:rgba(0,0,0,.06);
+      --nav-blur:  rgba(247,245,242,.88);
+      --shadow:    0 8px 32px rgba(0,0,0,.12);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background .3s var(--ease), color .3s var(--ease);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ─── CURSOR GLOW ────────────────────────────────────────── */
+    #glow {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(600px circle at var(--mx,50%) var(--my,50%),
+        rgba(91,79,232,.10) 0%, transparent 70%);
+      transition: background .08s;
+    }
+    [data-theme="light"] #glow { opacity: .5; }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      padding: 0 clamp(1rem, 4vw, 3rem);
+      background: var(--nav-blur);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: background .3s var(--ease);
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: var(--fs-xl);
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, var(--indigo-l), var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(.5rem, 2vw, 2rem);
+    }
+    .nav-links a {
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--text-2);
+      transition: color .2s;
+      position: relative;
+      padding: .25rem 0;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: var(--indigo);
+      border-radius: 2px;
+      transition: width .25s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-right { display: flex; align-items: center; gap: .75rem; }
+
+    /* theme toggle */
+    .theme-btn {
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--card-bg);
+      cursor: pointer;
+      display: grid; place-items: center;
+      transition: background .2s, border-color .2s, transform .2s;
+      flex-shrink: 0;
+    }
+    .theme-btn:hover { background: var(--card-hover); transform: rotate(20deg); }
+    .theme-btn svg { width: 18px; height: 18px; fill: var(--text-2); transition: fill .2s; }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block;
+      width: 18px; height: 2px;
+      background: var(--text-2);
+      border-radius: 2px;
+      transition: transform .3s var(--ease), opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* mobile drawer */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: var(--nav-blur);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      z-index: 99;
+      flex-direction: column;
+      gap: .25rem;
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .3s var(--ease), opacity .3s var(--ease);
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: .75rem clamp(1rem, 4vw, 3rem);
+      font-size: var(--fs-base);
+      font-weight: 500;
+      color: var(--text-2);
+      transition: color .2s, background .2s;
+    }
+    .mobile-menu a:hover { color: var(--text); background: var(--card-bg); }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    main { position: relative; z-index: 1; }
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: clamp(4rem,10vh,7rem) clamp(1.25rem, 4vw, 3rem);
+    }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--indigo-l);
+      margin-bottom: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--indigo);
+      border-radius: 2px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--fs-3xl);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: var(--fs-lg);
+      color: var(--text-2);
+      max-width: 56ch;
+      line-height: 1.7;
+    }
+    hr.section-rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 clamp(1.25rem, 4vw, 3rem);
+    }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: calc(var(--nav-h) + 3rem);
+      padding-bottom: 4rem;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--text-3);
+      letter-spacing: .06em;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--text-3);
+    }
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--fs-hero);
+      font-weight: 700;
+      letter-spacing: -.04em;
+      line-height: .95;
+      margin-bottom: .5rem;
+    }
+    .hero-name .gradient-text {
+      background: linear-gradient(135deg, var(--indigo-l) 0%, var(--amber) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradShift 6s ease infinite;
+    }
+    @keyframes gradShift {
+      0%,100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+    .hero-role {
+      font-size: clamp(1.1rem, 3vw, 1.75rem);
+      color: var(--text-2);
+      font-weight: 400;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    .hero-role strong { color: var(--text); font-weight: 600; }
+    .hero-desc {
+      max-width: 52ch;
+      color: var(--text-2);
+      line-height: 1.8;
+      font-size: var(--fs-lg);
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .8rem 1.75rem;
+      background: var(--indigo);
+      color: #fff;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      border-radius: var(--radius);
+      transition: background .2s, transform .2s, box-shadow .2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background: var(--indigo-l);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(91,79,232,.4);
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .8rem 1.75rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      border-radius: var(--radius);
+      transition: background .2s, transform .2s, border-color .2s;
+      cursor: pointer;
+    }
+    .btn-ghost:hover {
+      background: var(--card-hover);
+      border-color: var(--indigo);
+      transform: translateY(-2px);
+    }
+    .hero-scroll {
+      margin-top: 5rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      color: var(--text-3);
+      font-size: var(--fs-xs);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      animation: float 3s ease-in-out infinite;
+    }
+    .scroll-dot {
+      width: 28px; height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      display: grid; place-items: start center;
+      padding-top: 8px;
+    }
+    .scroll-dot::after {
+      content: '';
+      width: 4px; height: 8px;
+      background: var(--indigo-l);
+      border-radius: 2px;
+      animation: scrollDown 2s ease-in-out infinite;
+    }
+    @keyframes scrollDown {
+      0%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(12px); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-4px); }
+    }
+
+    /* stat pills */
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .55rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: var(--fs-sm);
+      background: var(--card-bg);
+    }
+    .stat-pill strong { color: var(--indigo-l); font-weight: 700; }
+
+    /* ─── ABOUT ──────────────────────────────────────────────── */
+    #about { padding-top: 2rem; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+    .about-photo-wrap {
+      position: relative;
+    }
+    .photo-placeholder {
+      aspect-ratio: 4/5;
+      border-radius: 20px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--text-3);
+      font-size: var(--fs-sm);
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-placeholder svg { width: 48px; height: 48px; opacity: .4; }
+    .photo-placeholder .photo-hint {
+      font-size: var(--fs-xs);
+      text-align: center;
+      padding: 0 2rem;
+      opacity: .6;
+      line-height: 1.6;
+    }
+    .photo-badge {
+      position: absolute;
+      bottom: -1rem; right: -1rem;
+      background: var(--indigo);
+      color: #fff;
+      padding: .6rem 1rem;
+      border-radius: 10px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+    }
+    .about-text p {
+      color: var(--text-2);
+      line-height: 1.85;
+      margin-bottom: 1.25rem;
+      font-size: var(--fs-base);
+    }
+    .about-text p:first-of-type {
+      font-size: var(--fs-lg);
+      color: var(--text);
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: 1.75rem;
+    }
+    .tag {
+      padding: .35rem .85rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--card-bg);
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .tag:hover { border-color: var(--indigo); color: var(--indigo-l); background: rgba(91,79,232,.08); }
+
+    /* ─── JOURNEY ────────────────────────────────────────────── */
+    #journey .timeline {
+      margin-top: 3rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 6px; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--indigo), transparent);
+      border-radius: 2px;
+    }
+    .tl-item {
+      position: relative;
+      padding-bottom: 3rem;
+    }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute;
+      left: -2.45rem;
+      top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--indigo);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px rgba(91,79,232,.25);
+    }
+    .tl-period {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: .4rem;
+    }
+    .tl-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--fs-xl);
+      font-weight: 600;
+      margin-bottom: .25rem;
+    }
+    .tl-place {
+      font-size: var(--fs-sm);
+      color: var(--indigo-l);
+      font-weight: 500;
+      margin-bottom: .75rem;
+    }
+    .tl-desc {
+      color: var(--text-2);
+      line-height: 1.75;
+      font-size: var(--fs-sm);
+      max-width: 60ch;
+    }
+    .tl-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .75rem;
+    }
+    .tl-tag {
+      padding: .2rem .65rem;
+      border-radius: 4px;
+      background: rgba(91,79,232,.12);
+      color: var(--indigo-l);
+      font-size: var(--fs-xs);
+      font-weight: 500;
+    }
+
+    /* ─── PROJECTS ───────────────────────────────────────────── */
+    #projects .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 480px) { #projects .project-grid { grid-template-columns: 1fr; } }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: background .25s, border-color .25s, transform .25s, box-shadow .25s;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--indigo), var(--amber));
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .project-card:hover {
+      background: var(--card-hover);
+      border-color: rgba(91,79,232,.35);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+    .project-card:hover::before { opacity: 1; }
+
+    .project-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(91,79,232,.15);
+      display: grid; place-items: center;
+      font-size: 1.25rem;
+    }
+    .project-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .project-status {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      padding: .2rem .65rem;
+      border-radius: 100px;
+    }
+    .status-live {
+      background: rgba(52,211,153,.12);
+      color: #34D399;
+    }
+    .status-wip {
+      background: rgba(245,166,35,.12);
+      color: var(--amber);
+    }
+    .status-archived {
+      background: var(--card-bg);
+      color: var(--text-3);
+    }
+    .project-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--fs-xl);
+      font-weight: 700;
+    }
+    .project-desc {
+      color: var(--text-2);
+      font-size: var(--fs-sm);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .stack-chip {
+      padding: .2rem .6rem;
+      border-radius: 4px;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      background: var(--bg3);
+      color: var(--text-3);
+    }
+    .project-links {
+      display: flex;
+      gap: .75rem;
+      margin-top: .25rem;
+    }
+    .project-link {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--indigo-l);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      transition: color .2s, gap .2s;
+    }
+    .project-link:hover { color: var(--amber); gap: .5rem; }
+    .project-link svg { width: 12px; height: 12px; }
+
+    /* featured project */
+    .project-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .featured-img {
+      flex: 0 0 260px;
+      aspect-ratio: 16/10;
+      border-radius: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--text-3);
+      font-size: var(--fs-sm);
+    }
+    .featured-body { flex: 1; display: flex; flex-direction: column; gap: .75rem; }
+    @media (max-width: 700px) {
+      .project-card.featured { flex-direction: column; }
+      .featured-img { flex: none; width: 100%; }
+    }
+
+    /* ─── SKILLS / TOOLS ─────────────────────────────────────── */
+    #skills .skills-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    .skill-group {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+    .skill-group-title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 1rem;
+    }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .45rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: var(--fs-sm);
+      color: var(--text-2);
+    }
+    .skill-item:last-child { border-bottom: none; }
+    .skill-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--indigo);
+      flex-shrink: 0;
+    }
+
+    /* ─── CONTACT / SOCIAL ───────────────────────────────────── */
+    #contact {
+      text-align: center;
+    }
+    #contact .section-label { justify-content: center; }
+    #contact .section-label::before { display: none; }
+    .contact-card {
+      margin-top: 3rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: clamp(2rem, 6vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(91,79,232,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .contact-email {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      transition: color .2s;
+      margin: 1.25rem 0 2.5rem;
+    }
+    .contact-email:hover { color: var(--indigo-l); }
+
+    .social-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .75rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-bg);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-2);
+      transition: background .2s, border-color .2s, color .2s, transform .2s;
+      min-width: 140px;
+      justify-content: center;
+    }
+    .social-link:hover {
+      background: var(--card-hover);
+      border-color: var(--indigo);
+      color: var(--text);
+      transform: translateY(-3px);
+    }
+    .social-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.25rem, 4vw, 3rem);
+      text-align: center;
+      color: var(--text-3);
+      font-size: var(--fs-sm);
+    }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .6s var(--ease), transform .6s var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- cursor glow -->
+  <div id="glow"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">[Nama]<span style="color:var(--amber)">.</span></a>
+
+      <ul class="nav-links">
+        <li><a href="#about">Tentang</a></li>
+        <li><a href="#journey">Perjalanan</a></li>
+        <li><a href="#projects">Proyek</a></li>
+        <li><a href="#skills">Keahlian</a></li>
+        <li><a href="#contact">Kontak</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+          <!-- sun icon (shown in dark mode) -->
+          <svg id="iconSun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5a7 7 0 1 0 0 14A7 7 0 0 0 12 5Zm0-3a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1Zm0 17a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0v-1a1 1 0 0 1 1-1ZM4.22 4.22a1 1 0 0 1 1.41 0l.71.71a1 1 0 0 1-1.41 1.41l-.71-.71a1 1 0 0 1 0-1.41Zm13.44 13.44a1 1 0 0 1 1.41 0l.71.71a1 1 0 0 1-1.41 1.41l-.71-.71a1 1 0 0 1 0-1.41ZM3 11h1a1 1 0 0 1 0 2H3a1 1 0 0 1 0-2Zm16 0h1a1 1 0 0 1 0 2h-1a1 1 0 0 1 0-2ZM5.64 17.64l-.71.71a1 1 0 0 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41Zm12.73-12.73.71-.71a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1-1.41-1.41Z"/>
+          </svg>
+          <!-- moon icon (shown in light mode) -->
+          <svg id="iconMoon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none">
+            <path d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79Z"/>
+          </svg>
+        </button>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" class="mobile-link">Tentang</a>
+    <a href="#journey" class="mobile-link">Perjalanan</a>
+    <a href="#projects" class="mobile-link">Proyek</a>
+    <a href="#skills" class="mobile-link">Keahlian</a>
+    <a href="#contact" class="mobile-link">Kontak</a>
+  </div>
+
+  <main>
+    <!-- ── HERO ─────────────────────────────── -->
+    <section id="hero">
+      <div class="hero-eyebrow">Halo, saya</div>
+      <h1 class="hero-name">
+        <span class="gradient-text">[Nama Depan]</span><br>[Nama Belakang]
+      </h1>
+      <p class="hero-role">
+        <strong>[Jabatan / Profesi Utama]</strong> &amp; [Bidang Sekunder]
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-pill"><strong>[X]+</strong> Tahun pengalaman</div>
+        <div class="stat-pill"><strong>[Y]+</strong> Proyek selesai</div>
+        <div class="stat-pill"><strong>[Z]+</strong> Klien puas</div>
+        <div class="stat-pill">📍 [Kota], Indonesia</div>
+      </div>
+
+      <p class="hero-desc">
+        [Satu kalimat kuat yang menggambarkan filosofi kerjamu — apa yang kamu percaya tentang profesimu dan dampak yang ingin kamu buat. Buat ini personal dan autentik.]
+      </p>
+
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">
+          Lihat Proyek Saya
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#contact" class="btn-ghost">
+          Hubungi Saya
+        </a>
+      </div>
+
+      <div class="hero-scroll">
+        <div class="scroll-dot"></div>
+        Scroll untuk eksplorasi
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- ── ABOUT ─────────────────────────────── -->
+    <section id="about">
+      <div class="section-label">Tentang Saya</div>
+      <h2 class="section-title">Siapa saya, sebenarnya?</h2>
+
+      <div class="about-grid reveal">
+        <div class="about-photo-wrap">
+          <div class="photo-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3Zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22Z"/></svg>
+            <span class="photo-hint">Ganti dengan fotomu — taruh file gambar di sini atau atur sebagai background-image</span>
+          </div>
+          <div class="photo-badge">✓ Open to Work / Freelance</div>
+        </div>
+
+        <div class="about-text">
+          <p>
+            [Paragraf pertama — ceritakan latar belakangmu secara singkat. Dari mana kamu berasal, apa passion-mu, dan apa yang membuatmu unik sebagai profesional. Ini kesan pertama yang kuat.]
+          </p>
+          <p>
+            [Paragraf kedua — perjalanan bagaimana kamu sampai ke sini. Momen eureka, keputusan besar, atau pengalaman yang membentuk caramu berpikir dan bekerja.]
+          </p>
+          <p>
+            [Paragraf ketiga — nilai-nilai dan cara kerjamu. Bagaimana kamu berkolaborasi, apa yang kamu pegang teguh, dan apa visimu ke depan.]
+          </p>
+
+          <div class="skill-tags">
+            <span class="tag">[Keahlian 1]</span>
+            <span class="tag">[Keahlian 2]</span>
+            <span class="tag">[Keahlian 3]</span>
+            <span class="tag">[Keahlian 4]</span>
+            <span class="tag">[Keahlian 5]</span>
+            <span class="tag">[Keahlian 6]</span>
+            <span class="tag">[Keahlian 7]</span>
+            <span class="tag">[Keahlian 8]</span>
+            <span class="tag">+ Lainnya</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- ── JOURNEY ────────────────────────────── -->
+    <section id="journey">
+      <div class="section-label">Perjalanan</div>
+      <h2 class="section-title">Dari mana hingga di sini</h2>
+      <p class="section-sub">Setiap langkah membentuk siapa saya hari ini.</p>
+
+      <div class="timeline reveal">
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-period">[Tahun] – Sekarang</div>
+          <div class="tl-title">[Posisi / Jabatan Terkini]</div>
+          <div class="tl-place">🏢 [Nama Perusahaan / Institusi]</div>
+          <p class="tl-desc">
+            [Deskripsikan tanggung jawab, pencapaian, dan kontribusi utamamu di posisi ini. Gunakan angka jika bisa — "meningkatkan X sebesar Y%", "mengelola tim Z orang", dll.]
+          </p>
+          <div class="tl-tags">
+            <span class="tl-tag">[Skill A]</span>
+            <span class="tl-tag">[Skill B]</span>
+            <span class="tl-tag">[Skill C]</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-period">[Tahun] – [Tahun]</div>
+          <div class="tl-title">[Posisi / Jabatan Sebelumnya]</div>
+          <div class="tl-place">🏢 [Nama Perusahaan / Institusi]</div>
+          <p class="tl-desc">
+            [Ceritakan pengalaman di sini. Apa yang kamu pelajari, proyek apa yang kamu kerjakan, dan bagaimana pengalaman ini membentukmu sebagai profesional.]
+          </p>
+          <div class="tl-tags">
+            <span class="tl-tag">[Skill A]</span>
+            <span class="tl-tag">[Skill B]</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-period">[Tahun] – [Tahun]</div>
+          <div class="tl-title">[Pendidikan / Pelatihan / Pengalaman Lain]</div>
+          <div class="tl-place">🎓 [Nama Institusi]</div>
+          <p class="tl-desc">
+            [Ceritakan masa studi atau pelatihan. Apa yang kamu pelajari, kegiatan ekstra, atau prestasi yang kamu raih selama periode ini.]
+          </p>
+          <div class="tl-tags">
+            <span class="tl-tag">[Jurusan / Bidang]</span>
+            <span class="tl-tag">[Aktivitas]</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-period">[Tahun]</div>
+          <div class="tl-title">[Titik Awal / Awal Ketertarikan]</div>
+          <div class="tl-place">✨ [Konteks / Cerita]</div>
+          <p class="tl-desc">
+            [Kisah tentang bagaimana kamu pertama kali tertarik pada bidangmu. Ini bisa berupa pengalaman masa kecil, momen insightful, atau keputusan yang mengubah hidupmu.]
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- ── PROJECTS ───────────────────────────── -->
+    <section id="projects">
+      <div class="section-label">Proyek</div>
+      <h2 class="section-title">Yang sudah saya buat</h2>
+      <p class="section-sub">Pilihan proyek terbaik yang mencerminkan kemampuan dan passion saya.</p>
+
+      <div class="project-grid reveal">
+
+        <!-- Featured Project -->
+        <div class="project-card featured">
+          <div class="featured-img">
+            <span style="font-size:var(--fs-sm); color:var(--text-3)">Preview / Screenshot</span>
+          </div>
+          <div class="featured-body">
+            <div class="project-meta">
+              <div class="project-icon">🚀</div>
+              <span class="project-status status-live">Live</span>
+            </div>
+            <h3 class="project-title">[Nama Proyek Unggulan]</h3>
+            <p class="project-desc">
+              [Deskripsikan proyek ini — apa masalah yang dipecahkan, siapa penggunanya, dan apa dampaknya. Ini adalah proyek utamamu, ceritakan dengan bangga.]
+            </p>
+            <div class="project-stack">
+              <span class="stack-chip">[Tech 1]</span>
+              <span class="stack-chip">[Tech 2]</span>
+              <span class="stack-chip">[Tech 3]</span>
+              <span class="stack-chip">[Tech 4]</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                Demo Live
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+              </a>
+              <a href="#" class="project-link">
+                Source Code
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <div class="project-icon">🎨</div>
+            <span class="project-status status-live">Live</span>
+          </div>
+          <h3 class="project-title">[Nama Proyek 2]</h3>
+          <p class="project-desc">
+            [Deskripsi singkat proyek kedua. Apa yang dibuat, untuk siapa, dan apa hasil atau dampaknya.]
+          </p>
+          <div class="project-stack">
+            <span class="stack-chip">[Tech 1]</span>
+            <span class="stack-chip">[Tech 2]</span>
+            <span class="stack-chip">[Tech 3]</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link">Demo Live <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg></a>
+            <a href="#" class="project-link">GitHub <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <div class="project-icon">⚡</div>
+            <span class="project-status status-wip">In Progress</span>
+          </div>
+          <h3 class="project-title">[Nama Proyek 3]</h3>
+          <p class="project-desc">
+            [Proyek yang sedang dikerjakan. Apa visi dan tujuannya, apa yang sudah dicapai sejauh ini, dan kapan rencana rilis.]
+          </p>
+          <div class="project-stack">
+            <span class="stack-chip">[Tech 1]</span>
+            <span class="stack-chip">[Tech 2]</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link">GitHub <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <div class="project-icon">🔬</div>
+            <span class="project-status status-archived">Archived</span>
+          </div>
+          <h3 class="project-title">[Nama Proyek 4]</h3>
+          <p class="project-desc">
+            [Proyek lama yang sudah selesai atau diarsip. Apa pelajaran yang dipetik dari proyek ini.]
+          </p>
+          <div class="project-stack">
+            <span class="stack-chip">[Tech 1]</span>
+            <span class="stack-chip">[Tech 2]</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link">GitHub <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- ── SKILLS ─────────────────────────────── -->
+    <section id="skills">
+      <div class="section-label">Keahlian & Tools</div>
+      <h2 class="section-title">Yang saya kuasai</h2>
+      <p class="section-sub">Teknologi dan tools yang saya gunakan sehari-hari.</p>
+
+      <div class="skills-cols reveal">
+        <div class="skill-group">
+          <div class="skill-group-title">💻 Development</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Bahasa / Framework 1]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Bahasa / Framework 2]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Bahasa / Framework 3]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Bahasa / Framework 4]</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">🎨 Design & UI</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool Desain 1]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool Desain 2]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool Desain 3]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Konsep Desain]</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">🛠️ Tools & DevOps</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool 1]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool 2]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool 3]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Tool 4]</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">🧠 Soft Skills</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Kemampuan 1]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Kemampuan 2]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Kemampuan 3]</div>
+          <div class="skill-item"><span class="skill-dot"></span>[Kemampuan 4]</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- ── CONTACT ────────────────────────────── -->
+    <section id="contact">
+      <div class="section-label">Kontak</div>
+      <h2 class="section-title">Mari berkolaborasi</h2>
+      <p class="section-sub" style="margin: 0 auto; text-align:center;">
+        Punya ide menarik, proyek seru, atau sekadar ingin ngobrol? Pintu saya selalu terbuka.
+      </p>
+
+      <div class="contact-card reveal">
+        <p style="color:var(--text-2); font-size:var(--fs-sm);">Hubungi langsung via email</p>
+        <a href="mailto:email@kamu.com" class="contact-email">
+          email@kamu.com
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <div style="color:var(--text-3); font-size:var(--fs-xs); margin-bottom:1.75rem; letter-spacing:.06em; text-transform:uppercase;">atau temukan saya di</div>
+
+        <div class="social-grid">
+          <!-- LinkedIn -->
+          <a href="https://linkedin.com/in/[username]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <!-- GitHub -->
+          <a href="https://github.com/[username]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+            GitHub
+          </a>
+          <!-- Instagram -->
+          <a href="https://instagram.com/[username]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            Instagram
+          </a>
+          <!-- Twitter / X -->
+          <a href="https://twitter.com/[username]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X / Twitter
+          </a>
+          <!-- YouTube (opsional) -->
+          <a href="https://youtube.com/@[channel]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </a>
+          <!-- Dribbble (untuk designer) -->
+          <a href="https://dribbble.com/[username]" target="_blank" rel="noopener" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308a10.11 10.11 0 0 0 4.392-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4a10.11 10.11 0 0 0 6.29 2.166 10.19 10.19 0 0 0 4.006-.816zm-11.62-2.073c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12a28.5 28.5 0 0 0-.7-1.345c-5.142 1.54-10.148 1.48-10.69 1.475a10.07 10.07 0 0 0 2.653 6.755zm-2.87-8.918c.55.015 4.81.015 9.616-1.29a69.07 69.07 0 0 0-3.467-5.013C3.55 4.228 1.883 6.956 1.516 10.457zm6.24-7.268a67.5 67.5 0 0 1 3.49 5.063c3.33-1.25 4.74-3.14 4.905-3.365a10.11 10.11 0 0 0-8.396-1.698zM16.07 8.587c-.195.27-1.77 2.29-5.25 3.72.26.53.51 1.07.748 1.618.08.19.16.376.232.563 3.41-.43 6.8.258 7.14.33a10.12 10.12 0 0 0-2.87-6.23z"/></svg>
+            Dribbble
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── FOOTER ──────────────────────────────── -->
+  <footer>
+    <p>Dibuat dengan ❤️ oleh <strong>[Nama Kamu]</strong> · © 2025</p>
+  </footer>
+
+  <!-- ── SCRIPTS ─────────────────────────────── -->
+  <script>
+    // Theme toggle
+    const html = document.documentElement;
+    const btn  = document.getElementById('themeToggle');
+    const sun  = document.getElementById('iconSun');
+    const moon = document.getElementById('iconMoon');
+
+    function applyTheme(t) {
+      html.setAttribute('data-theme', t);
+      if (t === 'dark') { sun.style.display=''; moon.style.display='none'; }
+      else              { sun.style.display='none'; moon.style.display=''; }
+      try { localStorage.setItem('theme', t); } catch {}
+    }
+
+    // restore
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) applyTheme(saved);
+    } catch {}
+
+    btn.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    // Hamburger / mobile menu
+    const ham  = document.getElementById('hamburger');
+    const menu = document.getElementById('mobileMenu');
+
+    ham.addEventListener('click', () => {
+      const open = ham.classList.toggle('open');
+      menu.classList.toggle('open', open);
+    });
+
+    // Close mobile menu on link click
+    menu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        ham.classList.remove('open');
+        menu.classList.remove('open');
+      });
+    });
+
+    // Cursor glow
+    const glow = document.getElementById('glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.setProperty('--mx', e.clientX + 'px');
+      glow.style.setProperty('--my', e.clientY + 'px');
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => obs.observe(el));
+
+    // Active nav link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const navH = parseInt(getComputedStyle(html).getPropertyValue('--nav-h')) || 68;
+
+    const linkMap = {};
+    navLinks.forEach(a => { linkMap[a.getAttribute('href').slice(1)] = a; });
+
+    const sectionObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const a = linkMap[e.target.id];
+        if (a) a.style.color = e.isIntersecting ? 'var(--text)' : '';
+      });
+    }, { rootMargin: `-${navH}px 0px -60% 0px` });
+
+    sections.forEach(s => sectionObs.observe(s));
+  </script>
+</body>
+</html>
