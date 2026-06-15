@@ -945,7 +945,7 @@
       <div class="about-grid reveal">
         <div class="photo-badge">✓ Open to Collaboration</div>
       </div>
-        <div class="about-text">
+        <div class="about-text"></div>
           <p>
             Saya Andi Nugraha, seorang Network Engineer muda berusia 18 tahun dari Bandung yang passionate di dunia teknologi jaringan dan infrastruktur digital.
           </p>
@@ -1204,27 +1204,7 @@
 
   <!-- ── SCRIPTS ─────────────────────────────── -->
   <script>
-    // Photo upload
-    const photoInput   = document.getElementById('photoInput');
-    const photoWrapper = document.getElementById('photoWrapper');
 
-    photoInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        // remove any old img
-        const old = photoWrapper.querySelector('.profile-img');
-        if (old) old.remove();
-        const img = document.createElement('img');
-        img.src = ev.target.result;
-        img.className = 'profile-img';
-        img.alt = 'Foto Andi Nugraha';
-        photoWrapper.prepend(img);
-        photoWrapper.classList.add('has-photo');
-      };
-      reader.readAsDataURL(file);
-    });
 
     // Theme toggle
     const html = document.documentElement;
