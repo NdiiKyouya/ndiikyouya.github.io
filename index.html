@@ -999,6 +999,56 @@ img {
       e.preventDefault(); 
     }
   }, { passive: false });
+
+  // ── AUTO SCROLL INACTIVITY ──────────────────────────────────
+let autoScrollTimer;
+let autoScrollInterval;
+let isScrollingDown = true;
+const inactivityTimeout = 7000;
+const scrollSpeed = 1;          
+
+function startAutoScroll() {
+  clearInterval(autoScrollInterval);
+  
+  autoScrollInterval = setInterval(() => {
+    const currentScroll = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+    if (isScrollingDown) {
+      window.scrollBy(0, scrollSpeed);
+      
+      if (window.scrollY >= maxScroll - 1) {
+        isScrollingDown = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        clearInterval(autoScrollInterval);
+        resetTimer();
+      }
+    } else {
+      if (currentScroll === 0) {
+        isScrollingDown = true;
+      }
+    }
+  }, 30); 
+}
+
+function stopAutoScroll() {
+  clearInterval(autoScrollInterval);
+}
+
+function resetTimer() {
+  stopAutoScroll();
+  clearTimeout(autoScrollTimer);
+  if (window.scrollY === 0) isScrollingDown = true; 
+  
+  autoScrollTimer = setTimeout(startAutoScroll, inactivityTimeout);
+}
+
+['mousemove', 'mousedown', 'pointerdown', 'touchstart', 'scroll', 'keydown'].forEach(evt => {
+  window.addEventListener(evt, resetTimer, { passive: true });
+});
+    
+resetTimer();
   </script>
 </body>
 </html>
