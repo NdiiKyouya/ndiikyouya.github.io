@@ -1,11 +1,8 @@
-<?php
-include_once 'antibot.php';
-?>
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Portofolio — Andi Nugraha</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -585,6 +582,18 @@ include_once 'antibot.php';
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
     .reveal.visible { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+    /* Mencegah seleksi teks secara visual */
+body {
+  -webkit-user-select: none;  /* Safari */
+  -ms-user-select: none;      /* IE 10 dan versi setelahnya */
+  user-select: none;          /* Standar */
+}
+
+/* Menyembunyikan pointer/menu unduh bawaan browser pada gambar */
+img {
+  pointer-events: none;
+}
   </style>
 </head>
 <body>
@@ -938,6 +947,67 @@ include_once 'antibot.php';
       });
     }, { rootMargin: `-${navH}px 0px -60% 0px` });
     document.querySelectorAll('section[id]').forEach(s => secObs.observe(s));
+  </script>
+  <script>
+  // 1. DISABLE KLIK KANAN (CONTEXT MENU)
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    alert("Maaf, fitur klik kanan dinonaktifkan demi keamanan konten.");
+  });
+
+  // 2. DISABLE DRAG & DROP GAMBAR (Mencegah Gambar Ditarik/Diunduh)
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('dragstart', function (e) {
+      e.preventDefault();
+    });
+  });
+
+  // 3. DISABLE COPIER & SELEKSI TEKS
+  document.addEventListener('selectstart', function (e) {
+    e.preventDefault();
+  });
+  document.addEventListener('copy', function (e) {
+    e.preventDefault();
+  });
+
+  // 4. DISABLE SHORTCUT KEYBOARD (Kombinasi tombol untuk inspect, zoom, screenshot)
+  document.addEventListener('keydown', function (e) {
+    // Mencegah F12 (Inspect Element)
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+    
+    // Mencegah Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+U (View Source)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's' || e.key === 'P' || e.key === 'p')) {
+      e.preventDefault();
+    }
+
+    // Mencegah Zooming via Keyboard (Ctrl + Plus, Ctrl + Minus, Ctrl + 0)
+    if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+      e.preventDefault();
+    }
+
+    // Mengganggu fungsi Screenshot bawaan (PrintScreen / Win+Shift+S)
+    // Catatan: Browser tidak bisa memblokir total PrintScreen karena itu fungsi OS, 
+    // tetapi kita bisa membersihkan clipboard atau mengaburkan layar saat tombol ditekan.
+    if (e.key === "PrintScreen" || (e.metaKey && e.shiftKey && (e.key === 'S' || e.key === 's'))) {
+      navigator.clipboard.writeText(""); // Menghapus isi clipboard
+      alert("Tangkapan layar dinonaktifkan.");
+    }
+  });
+
+  // 5. DISABLE ZOOMING VIA TOUCH / PINCH (Untuk Perangkat Mobile)
+  document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+  });
+  document.addEventListener('touchmove', function (e) {
+    if (e.scale !== undefined && e.scale !== 1) { 
+      e.preventDefault(); 
+    }
+  }, { passive: false });
   </script>
 </body>
 </html>
